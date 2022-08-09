@@ -39,6 +39,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("com.h2database:h2:$h2_version")
+    implementation("io.konform:konform-jvm:0.4.0")
 
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

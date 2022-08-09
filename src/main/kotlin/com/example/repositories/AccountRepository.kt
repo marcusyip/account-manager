@@ -1,6 +1,7 @@
 package com.example.repositories
 
 import com.example.entities.Account
+import com.example.entities.Transfer
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -30,11 +31,10 @@ class AccountRepository {
         updatedAt = row[Accounts.updatedAt],
     )
 
-    fun findById(id: Long): Account? {
-        val row = transaction {
-            Accounts.select { Accounts.id eq id }.first()
-        }
-        return resultRowToAccount(row)
+    fun findById(id: Long): Account? = transaction {
+        Accounts.select { Accounts.id eq id }
+            .map(::resultRowToAccount)
+            .singleOrNull()
     }
 
     fun debit(accountId: Long, debitAmount: BigDecimal, lockVersion: Int) = transaction {

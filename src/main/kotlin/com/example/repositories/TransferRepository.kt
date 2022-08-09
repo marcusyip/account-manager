@@ -53,6 +53,7 @@ class TransferRepository {
         recipientAccountId: Long,
         currency: String,
         amount: BigDecimal,
+        status: String,
         idempotencyKey: String
     ): Transfer {
         val id = transaction {
@@ -61,7 +62,7 @@ class TransferRepository {
                 it[Transfers.recipientAccountId] = recipientAccountId
                 it[Transfers.currency] = currency
                 it[Transfers.amount] = amount
-                it[Transfers.status] = "pending"
+                it[Transfers.status] = status
                 it[Transfers.idempotencyKey] = idempotencyKey
                 it[Transfers.lockVersion] = 1
                 val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)

@@ -1,6 +1,7 @@
 package com.example
 
 import com.example.dtos.CreateTransferDTO
+import com.example.dtos.ErrorDTO
 import com.example.entities.Account
 import com.example.entities.Transfer
 import com.example.services.AccountService
@@ -25,24 +26,35 @@ fun Application.configureRouting(
 
         route("/v1") {
             get("/accounts/{id}") {
-                val id = call.parameters.getOrFail<Long>("id").toLong()
-                val account: Account = accountService.findById(id)
+                try {
+                    val id = call.parameters.getOrFail<Long>("id").toLong()
+                    val account: Account = accountService.findById(id)
 
-                call.respond(account)
+                    call.respond(account)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, ErrorDTO(e))
+                }
             }
 
             get("/transfers") {
-                val transfers: List<Transfer> = transferService.findAll()
-                call.respond(transfers)
+                try {
+                    val transfers: List<Transfer> = transferService.findAll()
+                    call.respond(transfers)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, ErrorDTO(e))
+                }
             }
 
             post("/transfers") {
                 val createTransferDTO = call.receive<CreateTransferDTO>()
-                val transfer: Transfer = transferService.create(createTransferDTO)
+                try {
+                    val transfer: Transfer = transferService.create(createTransferDTO)
 
-                call.respond(HttpStatusCode.Created, transfer)
+                    call.respond(HttpStatusCode.Created, transfer)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, ErrorDTO(e))
+                }
             }
         }
-
     }
 }
